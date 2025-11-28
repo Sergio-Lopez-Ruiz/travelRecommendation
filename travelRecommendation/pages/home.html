@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Home</title>
+  <style>
+	html, body {
+		margin: 0;
+		padding: 0;
+		height: 100%;
+	}
+	
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      height: 100vh;
+      background-image: url('images/background.webp'); /* Cambia por tu imagen */
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+    }
+
+    .overlay {
+      background: rgba(0, 0, 0, 0.6);
+      padding: 40px;
+      border-radius: 10px;
+      text-align: center;
+      color: white;
+      max-width: 1000px;
+    }
+
+    .social-buttons {
+      margin-top: 20px;
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+      flex-wrap: wrap;
+    }
+
+    .social-buttons a {
+      text-decoration: none;
+      background-color: white;
+      color: #333;
+      padding: 10px 20px;
+      border-radius: 5px;
+      font-weight: bold;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .social-buttons a:hover {
+      transform: scale(1.05);
+      box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+    }
+  </style>
+</head>
+<body>
+
+  <div class="overlay">
+    <h1>Welcome to My Website</h1>
+    <p>
+      This is the home page. Here you can add a short description of your
+      project, business or personal brand.
+    </p>
+
+    <div class="social-buttons">
+      <a href="https://facebook.com" target="_blank">Facebook</a>
+      <a href="https://twitter.com" target="_blank">Twitter</a>
+      <a href="https://instagram.com" target="_blank">Instagram</a>
+      <a href="https://linkedin.com" target="_blank">LinkedIn</a>
+    </div>
+  </div>
+
+</body>
+</html>

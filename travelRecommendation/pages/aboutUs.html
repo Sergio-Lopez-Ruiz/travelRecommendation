@@ -55,9 +55,9 @@
   <nav class="navbar">
     <!-- Links -->
     <div class="nav-links">
-      <a href="pages\home.html">Home</a>
-      <a href="pages\aboutUs.html">About Us</a>
-      <a href="pages\contactUs.html">Contact Us</a>
+      <a href="index.html">Home</a>
+      <a href="about.html">About Us</a>
+      <a href="contact.html">Contact Us</a>
     </div>
 
     <!-- Search Bar -->
@@ -78,18 +78,6 @@
       document.getElementById("searchInput").value = "";
       alert("Search reset");
     }
-	
-	  function loadPage(page) {
-    fetch(`pages/${page}.html`)
-      .then(response => response.text())
-      .then(data => {
-        document.getElementById('content').innerHTML = data;
-      })
-      .catch(() => {
-        document.getElementById('content').innerHTML = "<p>Error loading page.</p>";
-      });
-  }
-  
   </script>
 
 </body>
