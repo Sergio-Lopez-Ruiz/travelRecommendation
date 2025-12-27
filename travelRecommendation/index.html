@@ -274,16 +274,6 @@
 	</div>
 
   <script>
-    function search() {
-      const keyword = document.getElementById("searchInput").value.trim();
-      alert("Searching for: " + keyword);
-    }
-
-    function resetSearch() {
-      document.getElementById("searchInput").value = "";
-      alert("Search reset");
-    }
-
     function loadPage(page) {
       fetch(`pages/${page}.html`)
         .then(response => {
@@ -300,6 +290,172 @@
 
     // Optional: load Home by default
     loadPage('home');
+	
+	  const DATA_URL = "api/travel_recommendation_api.json";
+  let travelDataCache = null;
+
+  function normalizeText(str) {
+    return (str ?? "")
+      .toString()
+      .toLowerCase()
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, ""); // quita acentos
+  }
+
+  function buildVariants(rawKeyword) {
+    const k = normalizeText(rawKeyword).trim();
+    if (!k) return [];
+
+    const variants = new Set([k]);
+
+    // plural básico con s
+    variants.add(k + "s");
+
+    // singular básico si acaba en s
+    if (k.endsWith("s") && k.length > 2) variants.add(k.slice(0, -1));
+
+    // si el usuario mete espacios múltiples, colapsa
+    variants.add(k.replace(/\s+/g, " "));
+
+    // también busca cada palabra por separado (útil para "madrid night")
+    k.split(/\s+/).forEach(w => {
+      if (w.length >= 3) {
+        variants.add(w);
+        variants.add(w + "s");
+        if (w.endsWith("s") && w.length > 2) variants.add(w.slice(0, -1));
+      }
+    });
+
+    return [...variants].filter(Boolean);
+  }
+
+  async function getTravelData() {
+    if (travelDataCache) return travelDataCache;
+
+    const res = await fetch(DATA_URL);
+    if (!res.ok) throw new Error(`Cannot load JSON: HTTP ${res.status}`);
+
+    travelDataCache = await res.json();
+    return travelDataCache;
+  }
+
+  function matchesAnyVariant(haystackText, variants) {
+    const h = normalizeText(haystackText);
+    return variants.some(v => v && h.includes(v));
+  }
+
+  function searchInData(data, keyword) {
+    const variants = buildVariants(keyword);
+    if (variants.length === 0) return [];
+
+    const results = [];
+
+    for (const country of data) {
+      const countryName = country?.name ?? "";
+      const countryHit = matchesAnyVariant(countryName, variants);
+
+      for (const city of (country?.cities ?? [])) {
+        const cityName = city?.name ?? "";
+        const desc = city?.description ?? "";
+
+        const hit =
+          countryHit ||
+          matchesAnyVariant(cityName, variants) ||
+          matchesAnyVariant(desc, variants);
+
+        if (hit) {
+          results.push({
+            country: countryName,
+            city: cityName,
+            description: desc,
+            imageUrl: city?.imageUrl ?? ""
+          });
+        }
+      }
+    }
+
+    return results;
+  }
+
+  function renderResults(keyword, results) {
+    const content = document.getElementById("content");
+    const safeKeyword = (keyword ?? "").toString();
+
+    if (results.length === 0) {
+      content.innerHTML = `
+        <div class="overlay">
+          <h2>No results</h2>
+          <p>No matches for "<b>${escapeHtml(safeKeyword)}</b>".</p>
+        </div>
+      `;
+      return;
+    }
+
+    const cardsHtml = results.map(r => `
+      <div class="result-card">
+        ${r.imageUrl ? `<img class="result-img" src="${escapeAttr(r.imageUrl)}" alt="${escapeAttr(r.city)}">` : ""}
+        <div class="result-body">
+          <div class="result-country">${escapeHtml(r.country)}</div>
+          <div class="result-city">${escapeHtml(r.city)}</div>
+          <div class="result-desc">${escapeHtml(r.description)}</div>
+        </div>
+      </div>
+    `).join("");
+
+    content.innerHTML = `
+      <div class="overlay">
+        <h2>Results for "${escapeHtml(safeKeyword)}"</h2>
+        <div class="results-grid">
+          ${cardsHtml}
+        </div>
+      </div>
+    `;
+  }
+
+  // helpers para evitar inyectar HTML sin querer
+  function escapeHtml(str) {
+    return (str ?? "").toString()
+      .replaceAll("&", "&amp;")
+      .replaceAll("<", "&lt;")
+      .replaceAll(">", "&gt;")
+      .replaceAll('"', "&quot;")
+      .replaceAll("'", "&#039;");
+  }
+  function escapeAttr(str) {
+    return escapeHtml(str).replaceAll("`", "&#096;");
+  }
+
+  async function search() {
+    const keyword = document.getElementById("searchInput").value;
+
+    try {
+      const data = await getTravelData();
+      const results = searchInData(data, keyword);
+      renderResults(keyword, results);
+    } catch (err) {
+      console.error(err);
+      document.getElementById("content").innerHTML = `
+        <div class="overlay">
+          <h2>Error</h2>
+          <p>${escapeHtml(err.message)}</p>
+        </div>
+      `;
+    }
+  }
+
+  function resetSearch() {
+    document.getElementById("searchInput").value = "";
+    // opcional: vuelve a Home o mensaje inicial
+    // loadPage('home');
+    document.getElementById("content").innerHTML = `
+      <div class="overlay">
+        <h2>Welcome</h2>
+        <p>Select a section from the menu, or search for a destination.</p>
+      </div>
+    `;
+  }
+	
+	
   </script>
 
 </body>
