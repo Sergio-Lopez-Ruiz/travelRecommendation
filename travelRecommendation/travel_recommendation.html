@@ -114,6 +114,29 @@
 	  transform: scale(1.05);
 	  box-shadow: 0 4px 10px rgba(0,0,0,0.3);
 	}
+	
+	#social-footer {
+	  display: flex;
+	  justify-content: center;
+	  gap: 15px;
+	  padding: 20px;
+	}
+
+	#social-footer a {
+	  text-decoration: none;
+	  background-color: white;
+	  color: #333;
+	  padding: 10px 20px;
+	  border-radius: 5px;
+	  font-weight: bold;
+	  transition: transform 0.2s, box-shadow 0.2s;
+	}
+
+	#social-footer a:hover {
+	  transform: scale(1.05);
+	  box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+	}
+
   </style>
 </head>
 
@@ -140,6 +163,13 @@
     <h1>Welcome</h1>
     <p>Select a section from the menu.</p>
   </div>
+
+	<div id="social-footer">
+	  <a href="https://facebook.com" target="_blank">Facebook</a>
+	  <a href="https://twitter.com" target="_blank">Twitter</a>
+	  <a href="https://instagram.com" target="_blank">Instagram</a>
+	  <a href="https://linkedin.com" target="_blank">LinkedIn</a>
+	</div>
 
   <script>
     function search() {
