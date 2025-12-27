@@ -1,0 +1,34 @@
+[
+  {
+    "id": 1,
+    "name": "Australia",
+    "cities": [
+      {
+        "name": "Sydney, Australia",
+        "imageUrl": "images/sydney.webp",
+        "description": "A vibrant city known for its iconic landmarks like the Sydney Opera House and Sydney Harbour Bridge."
+      },
+      {
+        "name": "Melbourne, Australia",
+        "imageUrl": "images/melbourne.jpg",
+        "description": "A cultural hub famous for its art, coffee culture, and lively streets."
+      }
+    ]
+  },
+  {
+    "id": 2,
+    "name": "Spain",
+    "cities": [
+      {
+        "name": "Barcelona, Spain",
+        "imageUrl": "images/barcelona.jpg",
+        "description": "A Mediterranean city famous for Gaudí architecture, beaches, and vibrant street life."
+      },
+      {
+        "name": "Madrid, Spain",
+        "imageUrl": "images/madrid.webp",
+        "description": "Spain’s capital, known for its world-class museums, royal palace, and lively nightlife."
+      }
+    ]
+  }
+]
